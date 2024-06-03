@@ -1,0 +1,135 @@
+programa ej1p4
+procesos
+  proceso EnviarID 
+  comenzar
+    EnviarMensaje (1,c1)
+    EnviarMensaje (2,c2)
+    EnviarMensaje (3, c3)
+  fin
+  proceso inicializar (ES Avc1:numero; ES Avc2:numero; ES Avc3:numero; ES Cac1:numero; ES Cac2:numero; ES Cac3:numero)
+  comenzar
+    Avc1:= 1
+    Avc2:= 2
+    Avc3:= 3
+    Cac1:= 2
+    Cac2:= 2
+    Cac3:= 2
+  fin
+  proceso serFlores (E cantF:numero)
+  comenzar
+    repetir cantF
+      tomarFlor
+  fin
+  proceso Recorrido (ES Av:numero; ES Ca:numero; E cantF:numero; E A:numero; E C:numero)
+  comenzar
+    serFlores (cantF)
+    Pos (Av, Ca)
+    mientras (cantF > 0)
+      depositarFlor
+      mover
+      cantF:= cantF - 1
+    Av:= PosAv
+    Ca:= PosCa
+    Pos (A,C)
+  fin
+  proceso juntarFlores (E cantF:numero)
+  comenzar
+    repetir cantF
+      mover
+      tomarFlor
+  fin  
+areas
+  cliente1: AreaPC (1,1,1,100)
+  cliente2: AreaPC (2,1,2,100)
+  cliente3: AreaPC (3,1,3,100)
+  iniser: AreaP (100,100,100,100)
+robots
+  robot cliente
+  variables
+    id:numero
+    cantF: numero
+    cantPedidos:numero
+    puedo:boolean
+  comenzar
+    RecibirMensaje (id, servi)
+    cantPedidos:=0
+    Random (cantF, 0, 4)
+    mientras (cantPedidos <= 99) & (cantF > 0)
+      cantPedidos:= cantPedidos + cantF
+      EnviarMensaje (id, servi)
+      EnviarMensaje (cantF, servi)
+      RecibirMensaje (puedo, servi)
+      si (puedo)
+        juntarFlores (cantF)
+        Random (cantF, 0,4)        
+      sino
+        cantF:= 0
+    si (cantPedidos >= 99) | (cantF = 0)
+      EnviarMensaje (id, servi)
+      EnviarMensaje (0, servi)
+  fin
+  robot servidor
+  variables
+    iniA:numero
+    iniC:numero
+    Avc1:numero
+    Avc2:numero
+    Avc3:numero
+    Cac1:numero
+    Cac2:numero
+    Cac3:numero
+    sos:numero
+    termino:numero
+    cant:numero
+  comenzar
+    inicializar (Avc1,Avc2,Avc3,Cac1,Cac2,Cac3)
+    iniA:= PosAv
+    iniC:= PosCa 
+    termino:=0
+    EnviarID
+    mientras (termino < 3)
+      RecibirMensaje (sos, *)
+      si (sos = 1)
+        RecibirMensaje (cant, c1)
+        Recorrido (Avc1,Cac1, cant, iniA, iniC)
+        si (cant > 0)
+          EnviarMensaje (V,c1)
+        sino
+          EnviarMensaje (F,c1)
+      sino 
+        si (sos = 2)
+          RecibirMensaje (cant, c2)
+          Recorrido (Avc2,Cac2, cant, iniA, iniC)
+          si (cant > 0)
+            EnviarMensaje (V, c2)
+          sino  
+            EnviarMensaje (F, c2)
+        sino
+          RecibirMensaje (cant, c3)
+          Recorrido (Avc3, Cac3, cant, iniA, iniC)
+          si (cant > 0) 
+            EnviarMensaje (V, c3)
+          sino
+            EnviarMensaje (F, c3)
+      si (cant < 1)
+        Informar (termino)
+        termino:= termino + 1
+  fin    
+variables
+  c1:cliente
+  c2:cliente
+  c3:cliente
+  servi: servidor
+comenzar
+  AsignarArea (c1,cliente1)
+  AsignarArea (c2, cliente2)
+  AsignarArea (c3, cliente3)
+  AsignarArea (servi, iniser)
+  AsignarArea (servi, cliente1)
+  AsignarArea (servi, cliente2)
+  AsignarArea (servi, cliente3)
+  Iniciar (servi, 100,100)
+  Iniciar (c1, 1,1)
+  Iniciar (c2, 2,1)
+  Iniciar (c3, 3,1)
+fin

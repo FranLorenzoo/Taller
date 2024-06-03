@@ -1,0 +1,128 @@
+programa par5
+procesos
+  proceso Enviar
+  comenzar
+    EnviarMensaje (1, p1)
+    EnviarMensaje (1, p2)
+    EnviarMensaje (2, f1)
+    EnviarMensaje (2, f2)
+  fin
+  proceso recorridoF (ES cantF:numero)
+  variables
+    cant:numero
+  comenzar
+    cant:= 0
+    repetir 2
+      repetir 10
+        mientras HayFlorEnLaEsquina
+          tomarFlor
+          cantF:= cantF +1
+        si cant = 0
+          BloquearEsquina (PosAv, PosCa +1)
+        sino
+          BloquearEsquina (PosAv + 1, PosCa)
+        mover
+        si cant = 0
+          LiberarEsquina (PosAv, PosCa - 1)
+        sino
+          LiberarEsquina (PosAv - 1, PosCa)
+      derecha
+      cant:= cant + 1
+  fin
+  proceso recorrido (ES cantP:numero)
+  variables
+    cant:numero
+  comenzar
+    cant:= 0
+    repetir 2
+      repetir 10
+        mientras HayPapelEnLaEsquina
+          tomarPapel
+          cantP:= cantP + 1 
+        si (cant = 0)
+          BloquearEsquina (PosAv, PosCa - 1)
+        sino
+          BloquearEsquina (PosAv - 1, PosCa)
+        mover
+        si (cant = 0)
+          LiberarEsquina (PosAv, PosCa + 1)
+        sino
+          LiberarEsquina (PosAv + 1, PosCa)
+      derecha
+      cant:= cant +1
+  fin
+areas
+  cuadrado1: AreaPC (3,3,13,13)
+  cuadrado2: AreaPC (16,3,26,13)
+  iniJ: AreaP (14,6,14,6)
+robots
+  robot papelero
+  variables
+    cantP,equipo:numero
+  comenzar
+    RecibirMensaje (equipo,jefe)
+    repetir 2 
+      derecha
+    cantP:= 0
+    recorrido (cantP)
+    EnviarMensaje (equipo, jefe)
+    RecibirMensaje (equipo, jefe)
+    EnviarMensaje (cantP, jefe)
+  fin
+  robot florero
+  variables
+    equipo, cantF:numero
+  comenzar
+    RecibirMensaje (equipo, jefe)
+    cantF:=0
+    recorridoF (cantF)
+    EnviarMensaje (equipo, jefe)
+    RecibirMensaje (equipo, jefe)
+    EnviarMensaje (cantF, jefe)
+  fin
+  robot fizcal
+  variables
+    llego,yaseinformoganador:boolean
+    cante1, cante2, cantTot, aux:numero
+  comenzar
+    llego:=F
+    cante1:= 0
+    cante2:= 0
+    cantTot:= 0
+    yaseinformoganador:= F
+    Enviar
+    repetir 4
+      RecibirMensaje (aux, *)
+      si (aux = 1)
+        cante1:= cante1 + 1
+      sino
+        cante2:= cante2 + 1
+      si (cante1 = 2) | (cante2 = 2)
+        llego:= V
+      si (yaseinformoganador = F) & (llego)
+        Informar (aux)
+        yaseinformoganador := V
+    Enviar
+    repetir 4
+      RecibirMensaje (aux, *)
+      cantTot:= cantTot + aux
+    Informar (cantTot)
+  fin  
+variables
+  p1: papelero
+  p2: papelero
+  f1: florero
+  f2: florero
+  jefe: fizcal  
+comenzar
+  AsignarArea (jefe, iniJ)
+  AsignarArea (f1, cuadrado1)
+  AsignarArea (p1, cuadrado1)
+  AsignarArea (f2, cuadrado2)
+  AsignarArea (p2, cuadrado2)
+  Iniciar (f1, 3,3)
+  Iniciar (p1, 13,13)
+  Iniciar (f2, 16,3)
+  Iniciar (p2, 26, 13)
+  Iniciar (jefe, 14,6)
+fin

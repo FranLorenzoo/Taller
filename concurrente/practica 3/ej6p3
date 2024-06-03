@@ -1,0 +1,135 @@
+programa ej6p3
+procesos
+  proceso recorrido (E ancho:numero)
+  variables
+    cant:numero
+  comenzar
+    cant:= 0
+    BloquearEsquina (PosAv,PosCa)
+    repetir 4
+      cant:= cant + 1
+      si (cant >= 2)
+        derecha
+      repetir ancho
+        si (ancho=6)
+          mientras HayFlorEnLaEsquina
+            tomarFlor
+        sino
+          si (ancho=10)
+            mientras (HayFlorEnLaEsquina)
+              tomarFlor
+            mientras HayPapelEnLaEsquina
+              tomarPapel
+          sino
+            mientras HayPapelEnLaEsquina
+              tomarPapel
+        si (cant = 1) 
+          BloquearEsquina(PosAv, PosCa + 1)
+          mover
+          LiberarEsquina (PosAv, PosCa - 1)
+        sino  
+          si (cant = 2) 
+            BloquearEsquina (PosAv + 1, PosCa)
+            mover
+            LiberarEsquina (PosAv - 1, PosCa)
+          sino 
+            si (cant = 3)
+              BloquearEsquina (PosAv, PosCa - 1)
+              mover
+              LiberarEsquina (PosAv, PosCa + 1)
+            sino
+              BloquearEsquina (PosAv -1, PosCa)
+              mover
+              LiberarEsquina (PosAv + 1, PosCa)
+    LiberarEsquina (PosAv, PosCa)
+  fin
+  proceso depositar (E soy:numero)
+  comenzar
+    si (soy = 1)
+      mientras (HayFlorEnLaBolsa)
+        mover
+        depositarFlor
+    sino
+      si (soy = 2)
+        mientras (HayFlorEnLaBolsa) | (HayPapelEnLaBolsa)
+          si HayPapelEnLaBolsa
+            depositarPapel
+          si HayFlorEnLaBolsa
+            depositarFlor
+          mover
+      sino
+        mientras HayPapelEnLaBolsa
+          mover
+          depositarPapel
+  fin
+areas
+  cuadrante6: AreaPC (2,2,8,4)
+  cuadrantea6: AreaPC (2,5,4,8)
+  cuadrante7: AreaPC (9,9,16,16)
+  cuadrante10: AreaPC (5,5,15,15)
+  jefe: AreaP (1,1,1,1)
+  av: AreaPC (20,1,24,100)
+robots
+  robot je
+  variables
+    sos:numero
+    rep:numero
+  comenzar
+    EnviarMensaje (1, r1)
+    EnviarMensaje (6,r1)
+    EnviarMensaje (2, r2)
+    EnviarMensaje (10, r2)
+    EnviarMensaje (3,r3)
+    EnviarMensaje (7, r3)
+    rep:=20
+    repetir 3
+      RecibirMensaje (sos, *)
+      si (sos = 1)
+        EnviarMensaje (rep, r1)
+      sino 
+        si (sos = 2)
+          EnviarMensaje (rep,r2)
+        sino
+          EnviarMensaje (rep, r3)
+      rep:= rep + 1
+  fin
+  robot car
+  variables
+    ancho:numero
+    soy:numero
+    av:numero
+  comenzar
+    RecibirMensaje (soy, jef)
+    RecibirMensaje (ancho, jef)
+    recorrido (ancho)
+    EnviarMensaje (soy, jef)
+    RecibirMensaje (av, jef)
+    derecha
+    Pos (av,1)
+    depositar (soy)
+  fin
+variables
+  r1: car
+  r2: car
+  r3: car
+  jef: je
+comenzar
+  AsignarArea (r1, cuadrante6)
+  AsignarArea (r1, cuadrantea6)
+  AsignarArea (r2, cuadrante7)
+  AsignarArea (r3, cuadrante10)
+  AsignarArea (r1, cuadrante7)
+  AsignarArea (r2, cuadrante6)
+  AsignarArea (r3, cuadrante7)
+  AsignarArea (r1, cuadrante10)
+  AsignarArea (r2, cuadrante10)
+  AsignarArea (r3, cuadrante6)
+  AsignarArea (r1, av)
+  AsignarArea (r2, av)
+  AsignarArea (r3, av)
+  AsignarArea (jef, jefe)
+  Iniciar (r1, 2,2)
+  Iniciar (r2, 5,5)
+  Iniciar (r3, 9,9)
+  Iniciar (jef, 1,1)
+fin

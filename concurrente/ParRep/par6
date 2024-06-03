@@ -1,0 +1,118 @@
+programa par6
+procesos
+  proceso depositar (E A:numero; E C:numero)
+  comenzar
+    BloquearEsquina (1,30)
+    Pos (1, 30)
+    mientras HayPapelEnLaBolsa
+      depositarPapel
+    Pos (A,C)
+    LiberarEsquina (1,30)
+  fin
+  proceso calcularMax (E cantp1:numero; E cantp2:numero; E cantp3:numero; ES sos:numero)
+  comenzar
+    si (cantp1 > cantp2)
+      sos:= 1
+    sino
+      sos:= 2
+    si sos = 1
+      si (cantp3 > cantp1)
+        sos:= 3
+    sino
+      si (cantp3 > cantp2)
+        sos:= 3
+  fin
+  proceso Enviar
+  variables
+    queav:numero
+  comenzar
+    EnviarMensaje (1, r1)
+    Random (queav, 1,7)
+    EnviarMensaje (queav, r1)
+    EnviarMensaje (2,r2)
+    Random (queav, 8,14)
+    EnviarMensaje (queav, r2)
+    EnviarMensaje ( 3, r3)
+    Random (queav, 15,21)
+    EnviarMensaje (queav, r3)
+  fin
+  proceso Pasos
+  variables
+    pasos:numero
+  comenzar
+    repetir 5
+      Random (pasos, 1,10)
+      EnviarMensaje (pasos, r1)
+      Random (pasos, 1,10)
+      EnviarMensaje (pasos, r2)
+      Random (pasos, 1,10)
+      EnviarMensaje (pasos,r3)
+  fin 
+  proceso darPasos (E pasos:numero;E queav:numero; ES cantPasos:numero)
+  comenzar
+    Pos (queav, 1)
+    repetir pasos
+      mientras HayPapelEnLaEsquina
+        tomarPapel
+      cantPasos:= cantPasos + pasos
+      si ((PosCa + 1) <= 40)
+        mover
+      sino
+        si ((PosAv + 1) <= 21) 
+          Pos (PosAv + 1, 1)
+        sino
+          Pos (PosAv - 1, 1)
+  fin
+areas
+  iniJ: AreaP (25,1,25,1)
+  cuad: AreaPC (1,1,21,40)
+robots
+  robot fizcal
+  variables
+    sos, cantp1, cantp2, cantp3:numero
+  comenzar
+    Enviar
+    Pasos
+    repetir 3
+      RecibirMensaje (sos, *)
+      si (sos = 1)
+        RecibirMensaje (cantp1, r1)
+      sino
+        si (sos = 2)
+          RecibirMensaje (cantp2, r2)
+        sino
+          RecibirMensaje (cantp3, r3)
+    calcularMax (cantp1, cantp2, cantp3, sos)
+    Informar (sos)
+  fin
+  robot papelero
+  variables
+    A,C,soy,pasos, queav, cantPasos: numero
+  comenzar
+    A:= PosAv
+    C:= PosCa
+    RecibirMensaje (soy,jefe)
+    RecibirMensaje (queav, jefe)
+    cantPasos:= 0
+    repetir 5
+      RecibirMensaje (pasos, jefe)
+      darPasos (pasos, queav, cantPasos)
+    depositar (A,C)
+    EnviarMensaje (soy, jefe)
+    EnviarMensaje (cantPasos, jefe)
+  fin
+variables
+  r1:papelero
+  r2:papelero
+  r3:papelero
+  jefe: fizcal
+comenzar
+  AsignarArea (jefe, iniJ)
+  AsignarArea (r1, cuad)
+  AsignarArea (r2, cuad)
+  AsignarArea (r3,cuad)
+  Iniciar (jefe, 25,1)
+  Iniciar (r1, 1,1)
+  Iniciar (r2, 8,1)
+  Iniciar (r3, 15,1)
+fin

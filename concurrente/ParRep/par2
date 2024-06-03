@@ -1,0 +1,132 @@
+programa par2
+procesos
+  proceso EnviarEquipo
+  comenzar
+    EnviarMensaje (1, e1r1)
+    EnviarMensaje (1, e1r2)
+    EnviarMensaje (2, e2r1)
+    EnviarMensaje (2, e2r2)
+  fin
+  proceso juntarFlor (E A:numero; E C:numero)
+  comenzar
+    BloquearEsquina (15,15)
+    Pos (15,15)
+    tomarFlor
+    Pos (A,C)
+    LiberarEsquina (15,15)
+  fin
+  proceso recorrerFlor
+  variables
+    A, C:numero
+  comenzar
+    derecha
+    repetir 4
+      A:= PosAv
+      C:= PosCa
+      juntarFlor (A,C)
+      depositarFlor
+      mover
+    juntarFlor (A,C)
+    depositarFlor
+  fin
+  proceso juntarPapel (E A:numero; E C:numero)
+  comenzar
+    BloquearEsquina (15,15)
+    Pos (15,15)
+    tomarPapel 
+    Pos (A,C)
+    LiberarEsquina (15,15)
+  fin
+  proceso recorrerPapel
+  variables
+    A,C:numero
+  comenzar
+    repetir 12
+      A:= PosAv
+      C:= PosCa
+      juntarPapel (A,C)
+      depositarPapel
+      mover
+    juntarPapel (A,C)
+    depositarPapel
+  fin
+areas
+  inie1r1: AreaP (50,50,50,50)
+  inie1r2: AreaP (51,51,51,51)
+  inie2r1: AreaP (52,52,52,52)
+  inie2r2: AreaP (53,53,53,53)
+  anchoe1: AreaP (5,4,9,4)
+  anchoe2: AreaP (11,4,15,4)
+  largoe1: AreaP (5,5,5,17)
+  largoe2: AreaP (11,5,11,17)
+  fuente: AreaPC (15,15,15,15)
+  iniJ: AreaP (1,1,1,1)
+robots
+  robot ancho
+  variables
+    soy:numero
+  comenzar
+    RecibirMensaje (soy, jefe)
+    si (soy = 1)
+      Pos (5,4)
+    sino
+      Pos (11,4)
+    recorrerFlor
+    EnviarMensaje (soy, jefe)
+  fin  
+  robot alto
+  variables
+    soy:numero
+  comenzar
+    RecibirMensaje (soy, jefe)
+    si (soy = 1)
+      Pos (5,5)
+    sino
+      Pos (11,5)
+    recorrerPapel
+    EnviarMensaje (soy, jefe)
+  fin
+  robot jef
+  variables
+    sos:numero
+    cant1:numero
+    cant2:numero
+  comenzar
+    EnviarEquipo
+    cant1:= 0
+    cant2:= 0
+    mientras (cant1 < 2) & (cant2 < 2)
+      RecibirMensaje (sos, *)
+      si (sos = 1)
+        cant1:= cant1 + 1
+      sino
+        cant2:= cant2 + 1
+    Informar (sos)
+    RecibirMensaje (sos, *)
+  fin
+variables
+  e1r1: ancho
+  e2r1: ancho
+  e1r2: alto
+  e2r2: alto
+  jefe: jef
+comenzar
+  AsignarArea (e1r1, fuente)
+  AsignarArea (e1r1, anchoe1)
+  AsignarArea (e1r1, inie1r1)
+  AsignarArea (e1r2, fuente)
+  AsignarArea (e1r2, largoe1)
+  AsignarArea (e1r2, inie1r2)
+  AsignarArea (e2r1, fuente)
+  AsignarArea (e2r1, anchoe2)
+  AsignarArea (e2r1, inie2r1)
+  AsignarArea (e2r2, fuente)
+  AsignarArea (e2r2, largoe2)
+  AsignarArea (e2r2, inie2r2)
+  AsignarArea (jefe, iniJ)
+  Iniciar (e1r1, 50,50)
+  Iniciar (e1r2, 51,51)
+  Iniciar (e2r1, 52,52)
+  Iniciar (e2r2, 53,53)
+  Iniciar (jefe, 1,1)
+fin

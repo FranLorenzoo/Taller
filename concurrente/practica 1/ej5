@@ -1,0 +1,69 @@
+programa Ej5
+procesos
+  proceso recorridoPE 
+  variables
+    Ca:numero
+    cont:numero
+  comenzar
+    cont:=0
+    Ca:= PosCa
+    repetir 2
+      repetir 20
+        mientras (HayPapelEnLaEsquina)
+          tomarPapel
+        mover
+      Pos (PosAv, Ca)
+      mientras (HayPapelEnLaBolsa)
+        depositarPapel
+      si (cont <1)
+        Pos (PosAv + 5, Ca)
+        cont:= cont + 1
+  fin
+  proceso recorridoUE
+  variables
+    Av:numero
+    cont:numero
+  comenzar
+    cont:=0
+    Av:=PosAv
+    repetir 2
+      repetir 20
+        mientras (HayFlorEnLaEsquina)
+          tomarFlor
+        mover
+      mientras (HayFlorEnLaEsquina)
+        depositarFlor
+      si (cont < 1)
+        Pos (Av, PosCa + 5)
+        cont:= cont + 1
+  fin
+areas
+  rob1: AreaP (1,75,21,80)
+  rob2: AreaP (75,80,80,100)
+  rob3: AreaP (80,10, 100, 15)
+  rob4: AreaP (10,1, 15, 21)
+robots
+  robot robP
+  comenzar
+    recorridoPE
+  fin
+  robot robF
+  comenzar
+    derecha 
+    recorridoUE
+  fin
+variables
+  r1: robF
+  r2: robP
+  r3: robF
+  r4: robP
+comenzar
+  AsignarArea (r1, rob1)
+  AsignarArea (r2, rob2)
+  AsignarArea (r3, rob3)
+  AsignarArea (r4, rob4)
+  Iniciar (r1, 1,75)
+  Iniciar (r2, 75, 80)
+  Iniciar (r3, 80, 10)
+  Iniciar (r4, 10,1)
+fin

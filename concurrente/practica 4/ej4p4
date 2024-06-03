@@ -1,0 +1,115 @@
+programa ej4p4
+procesos
+  proceso EnviarEsquina 
+  variables
+    QA:numero
+    QC:numero
+  comenzar
+    Random (QA, 2,100)
+    Random (QC, 2,100)
+    EnviarMensaje (QA, r1)
+    EnviarMensaje (QC, r2)
+  fin
+  proceso hacertarea (E A:numero;E C:numero; E QA:numero; E QC:numero; E num:numero)
+  comenzar
+    BloquearEsquina (QA, QC)
+    Pos (QA, QC)
+    si (num = 1)
+      mientras HayPapelEnLaEsquina
+        tomarPapel
+    sino
+      si num = 2
+        mientras HayFlorEnLaEsquina
+          tomarFlor
+      sino
+        mientras HayFlorEnLaBolsa
+          depositarFlor
+        mientras HayPapelEnLaBolsa
+          depositarPapel
+    Pos (A,C)
+    LiberarEsquina (QA, QC)
+  fin
+areas
+  trab: AreaPC (2,2,100,100)
+  ir1: AreaP (2,1,2,1)
+  ir2: AreaP (3,1,3,1)
+  iJ: AreaP (1,1,1,1)
+robots
+  robot trabajador
+  variables
+    quetarea:numero
+    iA:numero
+    iC:numero
+    QA:numero
+    QC:numero
+    termine:boolean
+  comenzar
+    termine:= F
+    iA:= PosAv
+    iC:= PosCa
+    RecibirMensaje (quetarea, jefe)
+    si (quetarea >= 4)
+      termine := V
+    mientras (termine = F)
+      Informar (quetarea)
+      RecibirMensaje (QA, jefe)
+      RecibirMensaje (QC, jefe)
+      hacertarea (iA,iC,QA, QC, quetarea)
+      EnviarMensaje (V, jefe)
+      RecibirMensaje (quetarea, jefe)
+      si (quetarea >= 4)
+        termine:= V
+  fin
+  robot boss
+  variables
+    terminasteT:boolean
+    tR1:boolean
+    tR2: boolean
+    termineG:boolean
+    qT:numero
+    cant:numero
+    sigo:boolean
+  comenzar
+    cant:= 0
+    tR1:= F
+    tR2:= F
+    termineG:=F
+    mientras (cant <= 10) & (termineG = F)
+      si (tR1 = F)
+        Random (qT, 1, 4)
+        EnviarMensaje (qT, r1)
+        si (qT <= 3)
+          EnviarEsquina
+        sino
+          tR1:= V
+      si (tR2 = F) 
+        Random (qT, 1,4)
+        EnviarMensaje (qT, r2)
+        si (qT <= 3) 
+          EnviarEsquina 
+        sino
+          tR2:= V
+      si ((tR1) & (tR2))
+        termineG:= V
+      si (tR1 = F)
+        RecibirMensaje (sigo, r1)
+        Informar (sigo)
+      si (tR2 = F)
+        RecibirMensaje (sigo, r2)
+        Informar (sigo)
+      cant:= cant +1
+  fin
+variables 
+  r1: trabajador
+  r2: trabajador
+  jefe: boss
+comenzar
+  AsignarArea (r1, ir1)
+  AsignarArea (r2, ir2)
+  AsignarArea (jefe, iJ)
+  AsignarArea (r1, trab)
+  AsignarArea (r2, trab)
+  Iniciar (jefe,1,1)
+  Iniciar (r1, 2,1)
+  Iniciar (r2,3,1)
+fin

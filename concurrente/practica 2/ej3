@@ -1,0 +1,87 @@
+programa ej3p2 
+procesos 
+  proceso recorridoF (ES cantF:numero)
+  comenzar 
+    repetir 9
+      mientras HayFlorEnLaEsquina 
+        tomarFlor 
+        cantF:= cantF + 1 
+      mover 
+    mientras HayFlorEnLaEsquina  
+      tomarFlor
+      cantF:= cantF + 1 
+  fin
+  proceso recorridoP (ES cantP:numero)
+  comenzar
+    repetir 9
+      mientras HayPapelEnLaEsquina
+        tomarPapel
+        cantP:= cantP + 1
+      mover
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      cantP:= cantP + 1
+  fin
+areas 
+  eA: AreaPC (1,1,21,1)
+  eB: AreaPC (1,5,21,5)
+robots 
+  robot A1
+  variables
+    cantP:numero
+  comenzar
+    derecha
+    cantP:=0
+    recorridoP (cantP)
+    EnviarMensaje (cantP, ra2)
+  fin
+  robot A2
+  variables
+    cantP:numero
+  comenzar
+    derecha
+    RecibirMensaje (cantP, ra1)
+    recorridoP (cantP)
+    mover
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      cantP:= cantP + 1
+    Informar (cantP)
+  fin
+  robot B1 
+  variables 
+    cantF:numero  
+  comenzar 
+    derecha
+    cantF:=0 
+    recorridoF (cantF)
+    EnviarMensaje (cantF, rb2)
+  fin 
+  robot B2 
+  variables 
+    cantF:numero  
+  comenzar 
+    derecha 
+    RecibirMensaje (cantF, rb1)
+    recorridoF (cantF)
+    mover
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      cantF:= cantF + 1
+    Informar (cantF) 
+  fin
+variables 
+  rb1:B1
+  rb2:B2
+  ra1:A1
+  ra2:A2
+comenzar 
+  AsignarArea (ra1, eA)
+  AsignarArea (ra2, eA)
+  AsignarArea (rb1, eB)
+  AsignarArea (rb2, eB)
+  Iniciar (ra1, 1,1)
+  Iniciar (ra2, 11, 1)
+  Iniciar (rb1, 1,5)
+  Iniciar (rb2, 11, 5)
+fin 

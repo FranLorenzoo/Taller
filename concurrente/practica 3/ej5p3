@@ -1,0 +1,72 @@
+programa ej5p3
+procesos
+  proceso juntarpap (E iniA:numero; E iniC:numero; ES Hay:boolean)
+  comenzar
+    BloquearEsquina (11,11)
+    Pos (11,11)
+    si (HayPapelEnLaEsquina)
+      tomarPapel
+    sino
+      Hay:=F
+    Pos (iniA, iniC)
+    LiberarEsquina (11,11)
+    mover
+  fin
+areas
+  carril1: AreaP (4,1,4,100)
+  carril2: AreaP (6,1,6,100)
+  carril3: AreaP (8,1,8,100)
+  carril4: AreaP (10,1,10,100)
+  Jjef: AreaP (1,1,1,1)
+  fuente: AreaPC (11,11,11,11)
+robots
+  robot coor
+  variables
+    sos:numero
+  comenzar
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    EnviarMensaje (4,r4)
+    RecibirMensaje (sos,*)
+    Informar (sos)
+  fin
+  robot carrera
+  variables
+    Hay:boolean
+    iniC:numero
+    iniA:numero
+    soy:numero
+  comenzar
+    iniC:= PosCa
+    iniA:= PosAv
+    Hay:=V
+    RecibirMensaje (soy,jef)
+    mientras (Hay)
+      juntarpap (iniA, iniC, Hay)
+      iniA:= PosAv
+      iniC:= PosCa
+    EnviarMensaje (soy, jef)
+  fin
+variables
+  r1:carrera
+  r2:carrera
+  r3:carrera
+  r4:carrera
+  jef:coor 
+comenzar
+  AsignarArea (r1, carril1)
+  AsignarArea (r2, carril2)
+  AsignarArea (r3, carril3)
+  AsignarArea (r4, carril4)
+  AsignarArea (r1, fuente)
+  AsignarArea (r2, fuente)
+  AsignarArea (r3, fuente)
+  AsignarArea (r4, fuente)
+  AsignarArea (jef, Jjef)
+  Iniciar (r1, 4,1)
+  Iniciar (r2, 6,1)
+  Iniciar (r3, 8,1)
+  Iniciar (r4, 10,1)
+  Iniciar (jef,1,1)
+fin 

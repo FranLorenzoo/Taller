@@ -1,0 +1,157 @@
+programa par3 
+procesos 
+  proceso Enviar
+  comenzar
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    EnviarMensaje (4,r4)
+  fin
+  proceso recorrer (E soy:numero; ES cantF:numero; ES cantP:numero)
+  variables 
+    cant:numero 
+  comenzar 
+    cant:= 0 
+    repetir 2 
+      si cant = 0 
+        repetir 8
+          si (soy = 2) | (soy = 4) 
+            BloquearEsquina (PosAv + 1, PosCa) 
+            mover  
+            LiberarEsquina (PosAv - 1, PosCa) 
+            mientras HayFlorEnLaEsquina 
+              tomarFlor 
+              cantF:= cantF + 1
+            mientras HayPapelEnLaEsquina 
+              tomarPapel 
+              cantP:= cantP + 1
+          sino 
+            BloquearEsquina (PosAv, PosCa + 1) 
+            mover 
+            LiberarEsquina (PosAv, PosCa - 1) 
+            mientras HayFlorEnLaEsquina 
+              tomarFlor 
+              cantF:= cantF +1
+            mientras HayPapelEnLaEsquina 
+              tomarPapel 
+              cantP:= cantP + 1
+        derecha 
+        repetir 2 
+          si (soy = 2) | (soy = 4)  
+            BloquearEsquina (PosAv, PosCa - 1)  
+            mover 
+            LiberarEsquina (PosAv, PosCa + 1) 
+            mientras HayFlorEnLaEsquina 
+              tomarFlor 
+              cantF:= cantF + 1
+            mientras HayPapelEnLaEsquina 
+              tomarPapel 
+              cantP:= cantP + 1
+          sino 
+            BloquearEsquina ( PosAv + 1, PosCa) 
+            mover 
+            LiberarEsquina (PosAv - 1, PosCa) 
+            mientras HayFlorEnLaEsquina 
+              tomarFlor 
+              cantF:= cantF + 1 
+            mientras HayPapelEnLaEsquina 
+              tomarPapel  
+              cantP:= cantP + 1
+        derecha 
+      sino 
+        repetir 8
+          si (soy = 2) | (soy = 4) 
+            BloquearEsquina (PosAv - 1, PosCa) 
+            mover 
+            LiberarEsquina (PosAv + 1, PosCa) 
+            mientras HayFlorEnLaEsquina 
+              tomarFlor 
+              cantF:= cantF + 1
+            mientras HayPapelEnLaEsquina 
+              tomarPapel
+              cantP:= cantP + 1 
+          sino 
+            BloquearEsquina (PosAv, PosCa - 1) 
+            mover 
+            LiberarEsquina (PosAv, PosCa + 1) 
+            mientras HayFlorEnLaEsquina 
+              tomarFlor 
+              cantF:= cantF + 1
+            mientras HayPapelEnLaEsquina 
+              tomarPapel 
+              cantP:= cantP + 1
+        derecha 
+        repetir 2 
+          si (soy = 2) | (soy = 4)  
+            BloquearEsquina (PosAv, PosCa + 1)  
+            mover 
+            LiberarEsquina (PosAv, PosCa - 1) 
+            mientras HayFlorEnLaEsquina 
+              tomarFlor 
+              cantF:= cantF + 1
+            mientras HayPapelEnLaEsquina 
+              tomarPapel 
+              cantP:= cantP + 1
+          sino 
+            BloquearEsquina (PosAv - 1, PosCa) 
+            mover 
+            LiberarEsquina (PosAv + 1, PosCa) 
+            mientras HayFlorEnLaEsquina 
+              tomarFlor 
+              cantF:= cantF + 1 
+            mientras HayPapelEnLaEsquina 
+              tomarPapel  
+              cantP:= cantP + 1 
+        derecha
+      cant:= cant + 1
+  fin
+areas
+  carrilr1: AreaPC (2,1,4,9)
+  carrilr2: AreaPC (1,2,9,4)
+  carrilr4: AreaPC (1,6,9,8)
+  carrilr3: AreaPC (6,1,8,9)
+  iniJEF: AreaP (20,15,20,15)
+robots
+  robot jefe
+  variables
+    aux,total:numero
+  comenzar
+    Enviar
+    total:= 0
+    repetir 4
+      RecibirMensaje (aux, *)
+      total:= total + aux
+    Informar (total)
+  fin
+  robot recorre
+  variables
+    cantF, cantP, soy:numero
+  comenzar
+    RecibirMensaje (soy, boss)
+    cantF:= 0
+    cantP:= 0
+    si (soy = 2) | (soy = 4)
+      derecha
+    recorrer (soy, cantF, cantP)
+    EnviarMensaje (cantF + cantP, boss)
+  fin
+variables
+  r1: recorre
+  r2: recorre
+  r3: recorre
+  r4: recorre
+  boss: jefe
+comenzar
+  AsignarArea (r1, carrilr1)
+  AsignarArea (r2, carrilr2)
+  AsignarArea (r3, carrilr3)
+  AsignarArea (r4, carrilr4)
+  AsignarArea (boss, iniJEF)
+  Iniciar (boss, 20,15)
+  Iniciar (r1, 2,1)
+  Iniciar (r2, 1,4)
+  Iniciar (r3, 6,1)
+  Iniciar (r4, 1,8)
+fin
+
+          

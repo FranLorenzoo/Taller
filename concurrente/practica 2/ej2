@@ -1,0 +1,53 @@
+programa ej1p2
+procesos
+  proceso recorrido (ES cantF:numero)
+  comenzar
+    repetir 10
+      mientras HayFlorEnLaEsquina
+        tomarFlor
+        cantF:= cantF +1
+      mover
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      cantF:= cantF + 1
+  fin    
+areas
+  ciu: AreaC (1,1,30,30)
+robots
+  robot flor
+  variables
+    cantF:numero
+    cantFF:numero
+    diff:numero
+  comenzar
+    cantF:=0
+    recorrido (cantF)
+    RecibirMensaje (cantFF, rob2)
+    EnviarMensaje (cantF,rob2)
+    diff:= cantF - cantFF
+    si (diff > 0)
+      Informar (diff)
+  fin
+  robot flor2
+  variables
+    cantFF:numero
+    diff:numero
+    cantF:numero
+  comenzar
+    cantF:=0
+    recorrido (cantF)
+    EnviarMensaje (cantF,r1)
+    RecibirMensaje (cantFF, r1)
+    diff:= cantF - cantFF
+    si (diff>0)
+      Informar (diff)
+  fin
+variables
+  r1:flor 
+  rob2:flor2
+comenzar
+  AsignarArea (r1,ciu)
+  AsignarArea (rob2,ciu )
+  Iniciar (r1, 1 , 1 )
+  Iniciar (rob2, 2, 11)
+fin

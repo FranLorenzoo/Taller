@@ -1,0 +1,73 @@
+programa ej4p3
+areas
+  cuadrante: AreaPC (10,10,11,11)
+  inir1: AreaP (9,9,9,9)
+  inir2: AreaP (9,10,9,10)
+  inir3: AreaP (9,11,9,11)
+  inir4: AreaP (9,12,9,12)
+  iniB: AreaP (1,1,1,1)
+robots
+  robot jefe
+  variables
+    sos:numero
+  comenzar
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    EnviarMensaje (4,r4)
+    repetir 4
+      RecibirMensaje (sos,*)
+    Informar (sos)
+  fin
+  robot mov
+  variables
+    todaviaHay:boolean
+    soy:numero
+    iniA:numero
+    iniC:numero
+  comenzar
+    iniA:= PosAv
+    iniC:= PosCa
+    todaviaHay:=V
+    RecibirMensaje (soy, boss)
+    mientras (todaviaHay)
+      BloquearEsquina (10,10)
+      Pos (10,10)
+      si HayFlorEnLaEsquina
+        tomarFlor
+      sino
+        todaviaHay:= F
+      si (todaviaHay) 
+        BloquearEsquina (11,11)
+        Pos (11,11)
+        si HayFlorEnLaBolsa
+          depositarFlor
+        Pos (iniA, iniC)
+        LiberarEsquina (11,11)
+      sino
+        Pos (iniA, iniC)
+      LiberarEsquina (10,10)
+    EnviarMensaje (soy, boss)
+  fin
+variables
+  r1: mov
+  r2: mov
+  r3: mov
+  r4: mov
+  boss: jefe
+comenzar
+  AsignarArea (r1,inir1)
+  AsignarArea (r1, cuadrante)
+  AsignarArea (r2, inir2)
+  AsignarArea (r2, cuadrante)
+  AsignarArea (r3,inir3)
+  AsignarArea (r3, cuadrante)
+  AsignarArea (r4, inir4)
+  AsignarArea (r4, cuadrante)
+  AsignarArea (boss, iniB)
+  Iniciar (boss,1,1)
+  Iniciar (r1, 9,9)
+  Iniciar (r2, 9,10)
+  Iniciar (r3, 9,11)
+  Iniciar (r4, 9,12)
+fin

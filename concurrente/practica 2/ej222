@@ -1,0 +1,87 @@
+programa ej2p22 
+procesos 
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso escalera(E alto:numero; ES cantF:numero; ES cantP:numero; ES cantDIF:numero) 
+  variables 
+    altoaux:numero 
+  comenzar 
+    repetir 4 
+      derecha 
+      mientras HayFlorEnLaEsquina 
+        tomarFlor 
+        cantF:= cantF + 1 
+      mientras HayPapelEnLaEsquina 
+        tomarPapel 
+        cantP:= cantP + 1 
+      mover
+      izquierda 
+      altoaux:= alto
+      mientras (altoaux > 0) 
+        mientras HayFlorEnLaEsquina 
+          tomarFlor 
+          cantF:= cantF + 1 
+        mientras HayPapelEnLaEsquina 
+          tomarPapel 
+          cantP:= cantP + 1 
+        altoaux:= altoaux - 1 
+        mover 
+      si (cantF > cantP) 
+        cantDIF:= cantDIF + 1 
+      cantF:= 0 
+      cantP:= 0  
+  fin   
+areas
+  jeffe: AreaP (1,1,1,1)
+  robs: AreaPC (2,1,50,50)
+robots
+  robot jefe
+  variables
+    cantDT:numero
+    aux:numero
+    difaux:numero
+  comenzar
+    cantDT:=0
+    Random (aux, 1 ,5)  
+    EnviarMensaje (aux, r1)
+    Random (aux, 1, 5)
+    EnviarMensaje (aux, r2)
+    Random (aux, 1 , 5)
+    EnviarMensaje (aux, r3)
+    repetir 3
+      RecibirMensaje (difaux, *)
+      cantDT:= cantDT + difaux  
+    Informar (cantDT)
+  fin
+  robot rob
+  variables
+    cantF:numero
+    cantP:numero
+    cantDIF:numero
+    alto:numero
+  comenzar
+    RecibirMensaje (alto, boss)
+    cantF:= 0
+    cantP:= 0
+    cantDIF:=0
+    escalera (alto, cantF, cantP, cantDIF)
+    EnviarMensaje (cantDIF, boss)
+  fin
+variables
+  r1: rob
+  r2: rob
+  r3: rob
+  boss: jefe
+comenzar
+  AsignarArea (r1, robs)
+  AsignarArea (r2, robs)
+  AsignarArea (r3, robs)
+  AsignarArea (boss, jeffe)
+  Iniciar (boss, 1,1)
+  Iniciar (r1, 2,1)
+  Iniciar (r2, 7,1)
+  Iniciar (r3, 12,1)
+fin

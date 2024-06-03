@@ -1,0 +1,147 @@
+programa par1
+procesos
+  proceso intento (E Av:numero; E Ca: numero; E iniA:numero; E iniC:numero; ES cantFP:numero)
+  comenzar
+    BloquearEsquina (Av, Ca)
+    Pos (Av,Ca)
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      cantFP:= cantFP +1
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      cantFP:= cantFP + 1
+    Pos (iniA, iniC)
+    LiberarEsquina (Av, Ca)
+  fin
+  proceso buscarmax (E cantFP1:numero; E cantFP2:numero; E cantFP3:numero; E cantFP:numero;ES  sos:numero)
+  comenzar
+    si (cantFP1 > cantFP2)
+      sos:= 1
+    sino
+      sos:= 2
+    si (sos = 1)
+      si (cantFP3> cantFP1)
+        sos:= 3
+    sino
+      si (cantFP3 > cantFP2)
+        sos:= 3
+    si (sos = 3)
+      si (cantFP4 > cantFP3)
+        sos:= 4
+    sino
+      si (sos = 1)
+        si (cantFP4 > cantFP1)
+          sos:= 4
+      sino
+        si (cantFP4 > cantFP2)
+          sos:= 4
+  fin
+  proceso EnviarQuienGano (E sos:numero)
+  comenzar
+    si (sos = 1)
+      EnviarMensaje (V, r1)
+      EnviarMensaje (F, r2)
+      EnviarMensaje (F, r3)
+      EnviarMensaje (F, r4)
+    sino
+      si (sos = 2)
+        EnviarMensaje (F, r1)
+        EnviarMensaje (V,r2)
+        EnviarMensaje (F, r3)
+        EnviarMensaje (F, r4)
+      sino
+        si (sos = 3)
+          EnviarMensaje (F, r1)
+          EnviarMensaje (F, r2)
+          EnviarMensaje (V, r3)
+          EnviarMensaje (F, r4)
+        sino
+          EnviarMensaje (F, r1)
+          EnviarMensaje (F, r2)
+          EnviarMensaje (F, r3)
+          EnviarMensaje (V, r4)
+  fin
+areas
+  or1: AreaP (10,10,10,10)
+  or2: AreaP (11,10,11,10)
+  or3: AreaP (12,10,12,10)
+  or4: AreaP (13,10,13,10)
+  cuad: AreaPC (45,48,62,69)
+  boss: AreaP (1,1,1,1)
+robots
+  robot recolector
+  variables
+    cantFP:numero
+    iniA:numero
+    iniC:numero
+    A:numero
+    C:numero
+    soy:numero
+    deposito:boolean
+  comenzar
+    RecibirMensaje (soy, jef)
+    cantFP:=0
+    iniA:= PosAv
+    iniC:= PosCa
+    repetir 5
+      Random (A, 45,62)
+      Random (C, 48,69)
+      intento (A, C, iniA, iniC, cantFP)
+    EnviarMensaje (soy, jef)
+    EnviarMensaje (cantFP, jef) {funciona como booleano para avisar que termino}
+    RecibirMensaje (deposito, jef)
+    si (deposito)
+      mientras HayPapelEnLaBolsa
+        depositarPapel
+      mientras HayFlorEnLaBolsa
+        depositarFlor
+  fin
+  robot jefe
+  variables
+    sos:numero
+    cantFP1:numero
+    cantFP2:numero
+    cantFP3:numero
+    cantFP4:numero
+  comenzar
+    EnviarMensaje (1,r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    EnviarMensaje (4,r4)
+    repetir 4
+      RecibirMensaje (sos,*)
+      si (sos = 1)
+        RecibirMensaje (cantFP1, r1)
+      sino
+        si (sos = 2)
+          RecibirMensaje (cantFP2, r2)
+        sino
+          si (sos = 3)
+            RecibirMensaje (cantFP3, r3)
+          sino
+            RecibirMensaje (cantFP4, r4)
+    buscarmax (cantFP1, cantFP2, cantFP3, cantFP4, sos)
+    EnviarQuienGano (sos)
+  fin
+variables
+  r1: recolector
+  r2: recolector
+  r3: recolector
+  r4: recolector
+  jef: jefe
+comenzar
+  AsignarArea (r1, or1)
+  AsignarArea (r2, or2)
+  AsignarArea (r3, or3)
+  AsignarArea (r4, or4)
+  AsignarArea (r1, cuad)
+  AsignarArea (r2, cuad)
+  AsignarArea (r3, cuad)
+  AsignarArea (r4, cuad)
+  AsignarArea (jef, boss)
+  Iniciar (jef , 1, 1)
+  Iniciar (r1, 10,10)
+  Iniciar (r2, 11,10)
+  Iniciar (r3, 12,10)
+  Iniciar (r4,13,10)
+fin

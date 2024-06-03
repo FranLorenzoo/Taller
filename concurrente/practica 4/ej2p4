@@ -1,0 +1,93 @@
+programa ej2p4
+procesos
+  proceso recorrer (ES cantP:numero; ES Av:numero; ES Ca:numero)
+  comenzar
+    mientras (PosCa <= 100) & (cantP < 5)
+      mientras (HayPapelEnLaEsquina) & (cantP < 5)
+        tomarPapel
+        cantP:= cantP + 1
+      si (cantP < 5)
+        mover
+      sino
+        Av:= PosAv
+        Ca:= PosCa
+  fin
+  proceso depositar (E Av:numero; E Ca:numero; E cantP:numero)
+  comenzar
+    BloquearEsquina (50,50)
+    Pos (50,50)
+    repetir cantP
+      depositarPapel
+    Pos (Av,Ca)
+    LiberarEsquina (50,50)
+  fin
+  proceso juntar (E cantP: numero; ES terminaron:numero; E A:numero; E C:numero)
+  variables
+    cant:numero
+  comenzar
+    cant:= 0
+    Pos (50,50) 
+    repetir cantP
+      si HayFlorEnLaEsquina
+        tomarFlor
+        cant:= cant +1
+    si (cant < cantP)
+      mientras HayFlorEnLaBolsa
+        depositarFlor
+      terminaron:= terminaron + 1
+    sino
+      terminaron := 0
+  fin
+areas
+  fuente: AreaC (50,50,50,50)
+  carril1: AreaP (5,1,5,100)
+  carril2: AreaP (10,1,10,100)
+  inic1: AreaP (11,1,11,1)
+  inic2: AreaP (12,1,12,1)
+robots
+  robot recolector
+  variables
+    cant: numero
+    av:numero
+    ca:numero
+  comenzar
+    mientras (PosCa <= 100)
+      cant:=0
+      recorrer (cant,av,ca)
+      depositar (av,ca,cant)
+  fin
+  robot consumidor
+  variables
+    terminaron: numero
+    cantTomar: numero
+    A:numero
+    C:numero
+    s:numero
+  comenzar
+    A:= PosAv
+    C:= PosCa
+    mientras (terminaron < 8)
+      Random (cantTomar, 2,5)
+      BloquearEsquina (50,50)
+      juntar (cantTomar, terminaron, A,C)
+      LiberarEsquina (50,50)
+  fin
+variables
+  r1: recolector
+  r2: recolector
+  c1: consumidor
+  c2: consumidor
+comenzar
+  AsignarArea (r1, carril1)
+  AsignarArea (r2, carril2)
+  AsignarArea (r1,fuente)
+  AsignarArea (r2, fuente)
+  AsignarArea (c1, fuente)
+  AsignarArea (c2, fuente)
+  AsignarArea (c1, inic1)
+  AsignarArea (c2, inic2)
+  Iniciar (r1, 5,1)
+  Iniciar (r2, 10,1)
+  Iniciar (c1, 11,1)
+  Iniciar (c2, 12,1)
+fin

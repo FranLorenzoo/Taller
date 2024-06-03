@@ -1,0 +1,62 @@
+programa ej3p3
+procesos
+areas
+  inir1:AreaP
+  inir2: AreaP
+  inir3: AreaP
+  inir4: AreaP
+  iniJef: AreaP
+  cuadrante: AreaPC
+robots
+  robot jefe
+  variables
+    sos:numero
+    A:numero
+    C:numero
+  comenzar
+    Random (A, 2,10)
+    Random (C, 2,10)
+    EnviarMensaje (1, r1)
+    EnviarMensaje (2,r2)
+    EnviarMensaje (3,r3)
+    EnviarMensaje (4, r4)
+    EnviarMensaje (A, r1)
+    EnviarMensaje (C, r1)
+    EnviarMensaje (A, r2)
+    EnviarMensaje (C, r2)
+    EnviarMensaje (A, r3)
+    EnviarMensaje (C, r3)
+    EnviarMensaje (A, r4)
+    EnviarMensaje (C, r4)
+  fin
+  robot Lucia
+  variables
+    soy:numero
+    A:numero
+    C:numero
+    IA:numero
+    IC:numero
+    sigueHabiendo:boolean
+    cantF:numero
+  comenzar
+    IA:= PosAv
+    IC:= PosCa
+    cantF:=0
+    RecibirMensaje (soy, Fran)
+    RecibirMensaje (A, Fran)
+    RecibirMensaje (C, Fran)
+    sigueHabiendo:=V
+    mientras (sigueHabiendo)
+      BloquearEsquina (A,C)
+      Pos (A,C)
+      si (HayFlorEnLaEsquina
+        tomarFlor
+        cantF:= cantF +1
+      sino
+        sigueHabiendo:= F
+      Pos(IA,IC)
+      LiberarEsquina (A,C)
+  fin
+variables
+comenzar
+fin
