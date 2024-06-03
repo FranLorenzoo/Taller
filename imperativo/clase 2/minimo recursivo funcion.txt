@@ -1,0 +1,9 @@
+function minimo (min:integer;l:lista):integer;
+begin
+	if (l<>nil) then begin
+		if (min > l^.dato) then 
+			min:= l^.dato;
+		min:= minimo (min,l^.sig);
+	end;
+	minimo:= min;
+end;
